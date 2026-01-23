@@ -1,0 +1,1 @@
+To set up and use the HIL workflows, you must create a GitHub Actions runner on the server. You’ll need higher-level permissions to create the runner, and you should double-check that the runner name matches what’s specified in the workflows.
