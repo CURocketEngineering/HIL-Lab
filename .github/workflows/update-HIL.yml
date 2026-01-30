@@ -1,0 +1,41 @@
+
+name: Update Local Script
+
+#when the update.sh is updated in the repo it will update the copy on the server
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "update hil/update.sh"
+
+  #allows manual triggering of the workflow
+  workflow_dispatch:
+
+#replaces the old update.sh with the new one in the repo
+jobs:
+  update_script:
+    runs-on: [self-hosted, linux]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Replace local update.sh
+        run: |
+          NEW_SCRIPT_PATH="${{ github.workspace }}/update hil/update.sh"
+          
+          LOCAL_SCRIPT_PATH="$HOME/update.sh"
+          
+          if [ -f "$NEW_SCRIPT_PATH" ]; then
+            cp "$NEW_SCRIPT_PATH" "$LOCAL_SCRIPT_PATH"
+            chmod +x "$LOCAL_SCRIPT_PATH"
+            echo "update.sh updated successfully in $HOME"
+          else
+            echo "Error: update.sh not found in repo folder 'update hil'!"
+            exit 1
+          fi
+
+
+      - name: Log update
+        run: echo "update.sh has been replaced with the latest version from the repo."

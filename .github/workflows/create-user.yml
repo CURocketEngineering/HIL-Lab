@@ -1,0 +1,39 @@
+
+name: create user script
+
+#when the create_user.sh is updated in the repo it will update the copy on the server
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "new user creator/create_user.sh"
+      
+  #allows manual triggering of the workflow
+  workflow_dispatch:
+
+#replaces the old create_user.sh with the new one in the repo
+jobs:
+  update_script:
+    runs-on: [self-hosted, linux]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Replace local create_user.sh
+        run: |
+          NEW_SCRIPT_PATH="${{ github.workspace }}/new user creator/create_user.sh"
+          LOCAL_SCRIPT_PATH="/usr/local/bin/create_user.sh"
+
+          if [ -f "$NEW_SCRIPT_PATH" ]; then
+            sudo /usr/bin/cp "$NEW_SCRIPT_PATH" "$LOCAL_SCRIPT_PATH"
+            sudo /usr/bin/chmod +x "$LOCAL_SCRIPT_PATH"
+            echo "create_user.sh updated successfully in $LOCAL_SCRIPT_PATH"
+          else
+            echo "Error: create_user.sh not found in repo folder!"
+            exit 1
+          fi
+
+      - name: Log update
+        run: echo "create_user.sh has been replaced with the latest version from the repo."
