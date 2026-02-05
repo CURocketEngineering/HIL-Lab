@@ -44,7 +44,7 @@ At the **bottom** of the file, paste the code from the **bashrc.sh** script:
 echo "Type 'create' to create a new user account, or 'exit' to log out."
 read input
 if [ "$input" == "create" ]; then
-    /usr/local/bin/create_user.sh
+    sudo /usr/local/bin/create_user.sh
     exit
 else
     echo "Goodbye!"
