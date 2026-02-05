@@ -1,13 +1,18 @@
 #!/bin/bash
 
+# Ensure the script is run with root privileges
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root. Use sudo."
+   exit 1
+fi
+
 echo "Creating a new user account..."
 
 # Loop until a valid username is entered
-echo "Enter a username (only letters, numbers, underscores, or dashes):"
 while true; do
-    read -rp "Please Enter a new username: " newuser
+    read -rp "Enter a username (letters, numbers, underscores, dashes): " newuser
 
-    # Check username (allowing lowercase, uppercase, numbers, underscores, and dashes)
+    # Validate username
     if [[ ! "$newuser" =~ ^[A-Za-z_][A-Za-z0-9_-]*$ ]]; then
         echo "Invalid username. Use only letters, numbers, underscores, or dashes."
         continue
@@ -19,7 +24,6 @@ while true; do
         continue
     fi
 
-    # If both checks pass, break out of loop
     break
 done
 
@@ -33,28 +37,26 @@ while true; do
     if [[ "$password" == "$password2" ]]; then
         break
     else
-        echo "Passwords do not match. Please try again."
+        echo "Passwords do not match. Try again."
     fi
 done
 
-# Create user first (without password)
-sudo adduser --disabled-password --gecos "" \
-  --groups plugdev,dialout,video,audio,input \
-  "$newuser" &>/dev/null
+# Create the user with home directory and groups
+useradd -m -G plugdev,dialout,video,audio,input "$newuser"
 
-# Set the password
-echo "$newuser:$password" | sudo chpasswd || {
-    echo "Failed to set password with chpasswd. Trying interactive passwd..."
-    sudo passwd "$newuser"
-}
+# Set the password safely
+echo "$newuser:$password" | chpasswd
 
-# Set the entered password
-echo "$newuser:$password" | sudo chpasswd
+# Verify password was set
+if [ $? -eq 0 ]; then
+    echo "Password set successfully."
+else
+    echo "Failed to set password! You may need to run 'sudo passwd $newuser'"
+fi
 
 # Completion messages
 echo "User '$newuser' has been created."
-echo "Password has been set by the user."
 echo "Home directory: /home/$newuser"
 echo "You can now SSH using: ssh $newuser@clemsoncure.duckdns.org"
 
-exit
+exit 0
