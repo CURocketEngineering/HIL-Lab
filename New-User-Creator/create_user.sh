@@ -57,6 +57,6 @@ fi
 # Completion messages
 echo "User '$newuser' has been created."
 echo "Home directory: /home/$newuser"
-echo "You can now SSH using: ssh $newuser@clemsoncure.duckdns.org"
+echo "You can now SSH using: ssh $newuser@curehil.duckdns.org"
 
 exit 0
