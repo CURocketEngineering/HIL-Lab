@@ -1,9 +1,6 @@
-
----
-
 ## Login User Setup
 
-This is how to setup a special user named **`login`** that automatically runs a user-creation script whenever it is accessed.
+This guide explains how to set up a special user named **`login`** that automatically runs a user-creation script whenever it is accessed.
 
 ---
 
@@ -13,10 +10,22 @@ This is how to setup a special user named **`login`** that automatically runs a 
 sudo adduser login
 ```
 
-You will also need to make the login User a Sudoer by running the following command:
+Make the `login` user a sudoer:
 
 ```bash
 sudo usermod -aG sudo login
+```
+
+Then run:
+
+```bash
+sudo visudo
+```
+
+Add the following line at the bottom, replacing `user` with the name of the user that is running the GitHub runner:
+
+```bash
+user ALL=(ALL) NOPASSWD: /usr/bin/cp, /usr/bin/chmod
 ```
 
 ---
@@ -29,7 +38,7 @@ Open the file:
 sudo nano /home/login/.bashrc
 ```
 
-At the **bottom** of the file, paste the code that is in the **bashrc.sh** script as shown below.
+At the **bottom** of the file, paste the code from the **bashrc.sh** script:
 
 ```bash
 echo "Type 'create' to create a new user account, or 'exit' to log out."
@@ -65,7 +74,7 @@ sudo chmod +x /usr/local/bin/create_user.sh
 
 ### 4. Grant Permissions
 
-Allow the `login` user to run the script and user management commands without a password:
+Allow the `login` user to run the script and user-management commands without a password:
 
 ```bash
 sudo visudo
@@ -103,5 +112,3 @@ cd /home/login
 Whenever the `login` user is accessed, the `create_user.sh` script will run automatically.
 
 ---
-
-
