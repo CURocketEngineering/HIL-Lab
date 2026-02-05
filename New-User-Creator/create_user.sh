@@ -37,10 +37,16 @@ while true; do
     fi
 done
 
-# Create user with USB-related group access
+# Create user first (without password)
 sudo adduser --disabled-password --gecos "" \
   --groups plugdev,dialout,video,audio,input \
   "$newuser" &>/dev/null
+
+# Set the password
+echo "$newuser:$password" | sudo chpasswd || {
+    echo "Failed to set password with chpasswd. Trying interactive passwd..."
+    sudo passwd "$newuser"
+}
 
 # Set the entered password
 echo "$newuser:$password" | sudo chpasswd
