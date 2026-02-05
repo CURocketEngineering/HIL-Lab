@@ -13,6 +13,12 @@ This is how to setup a special user named **`login`** that automatically runs a 
 sudo adduser login
 ```
 
+You will also need to make the login User a Sudoer by running the following command:
+
+```bash
+sudo usermod -aG sudo login
+```
+
 ---
 
 ### 2. Edit the `.bashrc` File

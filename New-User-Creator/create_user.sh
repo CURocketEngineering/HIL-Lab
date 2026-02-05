@@ -3,6 +3,7 @@
 echo "Creating a new user account..."
 
 # Loop until a valid username is entered
+echo "Enter a username (only letters, numbers, underscores, or dashes):"
 while true; do
     read -rp "Please Enter a new username: " newuser
 
@@ -36,8 +37,10 @@ while true; do
     fi
 done
 
-# Create user with no initial password
-sudo adduser --disabled-password --gecos "" "$newuser" &>/dev/null
+# Create user with USB-related group access
+sudo adduser --disabled-password --gecos "" \
+  --groups plugdev,dialout,video,audio,input \
+  "$newuser" &>/dev/null
 
 # Set the entered password
 echo "$newuser:$password" | sudo chpasswd
