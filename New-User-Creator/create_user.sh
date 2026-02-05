@@ -42,7 +42,8 @@ while true; do
 done
 
 # Create the user with home directory and groups
-useradd -m -G plugdev,dialout,video,audio,input "$newuser"
+useradd -m -s /bin/bash -G plugdev,dialout,video,audio,input "$newuser"
+
 
 # Set the password safely
 echo "$newuser:$password" | chpasswd
