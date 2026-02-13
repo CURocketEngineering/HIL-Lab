@@ -40,7 +40,8 @@ while true; do
         echo "Passwords do not match. Try again."
     fi
 done
-
+echo "Creating user..."
+echo "the bad password message can be ignored if it appears"
 # Create the user with home directory and groups
 useradd -m -s /bin/bash -G sudo,plugdev,dialout,video,audio,input "$newuser"
 
